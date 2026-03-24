@@ -3,7 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { ipcManager } from '~/app/ipc'
 import { Button } from '~/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '~/components/ui/select'
 import { cn } from '~/utils'
+import { useConfigLocalState } from '~/hooks'
 import { useGameMetadataUpdaterStore } from '../GameMetadataUpdater/store'
 import { useGameAdderStore } from './store'
 
@@ -19,6 +27,8 @@ export function BackgroundList(): React.JSX.Element {
     dbId,
     dirPath,
     gamePath,
+    upscaleScale,
+    setUpscaleScale,
     handleClose
   } = useGameAdderStore()
 
@@ -27,8 +37,12 @@ export function BackgroundList(): React.JSX.Element {
     setBackgroundUrl: setGameMetadataUpdaterBackgroundUrl,
     setDataSource: setGameMetadataUpdaterDataSource,
     setDataSourceId: setGameMetadataUpdaterDataSourceId,
-    setGameIds: setGameMetadataUpdaterGameIds
+    setGameIds: setGameMetadataUpdaterGameIds,
+    setUpscaleScale: setGameMetadataUpdaterUpscaleScale
   } = useGameMetadataUpdaterStore()
+
+  const [upscalerPath] = useConfigLocalState('game.linkage.upscaler.path')
+  const isUpscalerConfigured = !!upscalerPath
 
   const [isAdding, setIsAdding] = useState(false)
 
@@ -109,7 +123,7 @@ export function BackgroundList(): React.JSX.Element {
         setIsGameMetadataUpdaterDialogOpen(true)
         setIsAdding(false)
         setGameMetadataUpdaterDataSourceId(dataSourceId)
-        setIsAdding(false)
+        setGameMetadataUpdaterUpscaleScale(upscaleScale)
         handleClose()
         return
       } else {
@@ -120,6 +134,7 @@ export function BackgroundList(): React.JSX.Element {
           dataSource,
           dataSourceId,
           backgroundUrl,
+          upscaleScale: upscaleScale || undefined,
           dirPath,
           gamePath
         })
@@ -169,8 +184,24 @@ export function BackgroundList(): React.JSX.Element {
             </div>
           </div>
         </div>
-        <div className={cn('flex flex-row-reverse')}>
+        <div className={cn('flex flex-row-reverse items-center gap-3')}>
           <Button onClick={addGameToDB}>{t('utils:common.confirm')}</Button>
+          {!dbId && isUpscalerConfigured && (
+            <Select
+              value={String(upscaleScale)}
+              onValueChange={(val) => setUpscaleScale(Number(val))}
+            >
+              <SelectTrigger className="w-[140px] h-8 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">{t('gameAdder.backgrounds.noUpscale')}</SelectItem>
+                <SelectItem value="2">2x</SelectItem>
+                <SelectItem value="3">3x</SelectItem>
+                <SelectItem value="4">4x</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
     </div>

@@ -234,3 +234,58 @@ export async function writeClipboardImage(data: string, type: 'path'): Promise<b
     throw error
   }
 }
+
+export async function upscaleImage(
+  input: Buffer | string,
+  exePath: string,
+  options: { scale?: number } = {}
+): Promise<Buffer> {
+  const { execFile } = await import('child_process')
+  const { promisify } = await import('util')
+  const execFileAsync = promisify(execFile)
+
+  const scale = options.scale ?? 2
+  const inputPath = getAppTempPath(`upscale_input_${Date.now()}.png`)
+  const outputPath = getAppTempPath(`upscale_output_${Date.now()}.png`)
+
+  try {
+    // Prepare input: convert to local PNG file
+    let imageBuffer: Buffer
+    if (typeof input === 'string' && input.startsWith('http')) {
+      const response = await net.fetch(input)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`)
+      }
+      imageBuffer = Buffer.from(await response.arrayBuffer())
+    } else if (typeof input === 'string') {
+      imageBuffer = await fse.readFile(input)
+    } else {
+      imageBuffer = input
+    }
+
+    // Convert to PNG for maximum compatibility with ncnn-vulkan tools
+    sharp.cache(false)
+    const pngBuffer = await sharp(imageBuffer, { limitInputPixels: false }).png().toBuffer()
+    await fse.writeFile(inputPath, pngBuffer)
+
+    // Build arguments: all three tools share -i -o -s interface
+    const args = ['-i', inputPath, '-o', outputPath, '-s', String(scale)]
+
+    // Execute the upscaler
+    await execFileAsync(exePath, args, {
+      timeout: 5 * 60 * 1000, // 5 minute timeout
+      windowsHide: true
+    })
+
+    // Read and return the output
+    const result = await fse.readFile(outputPath)
+    return result
+  } catch (error) {
+    console.error('Error upscaling image:', error)
+    throw error
+  } finally {
+    // Clean up temp files
+    await fse.remove(inputPath).catch(() => {})
+    await fse.remove(outputPath).catch(() => {})
+  }
+}

@@ -26,7 +26,8 @@
         "adding": "Adding game…",
         "addSuccess": "Game added successfully",
         "addError": "Failed to add game: {{message}}"
-      }
+      },
+      "noUpscale": "No upscale"
     },
     "search": {
       "dataSource": "Data Source",
@@ -68,6 +69,8 @@
     }
   },
   "gameBatchAdder": {
+    "upscaleScale": "Upscale",
+    "noUpscale": "No upscale",
     "dialog": {
       "title": "Batch Add Games",
       "waitForCompletion": "Please wait for game addition to complete"

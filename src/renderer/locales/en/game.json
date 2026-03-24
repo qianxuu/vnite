@@ -674,7 +674,9 @@
       "update": "Update Metadata",
       "startBatch": "Start Batch Update",
       "updating": "Updating...",
-      "batchUpdating": "Batch Updating..."
+      "batchUpdating": "Batch Updating...",
+      "upscaleBackground": "Upscale background",
+      "noUpscale": "No upscale"
     },
     "notifications": {
       "updating": "Updating game metadata...",

@@ -26,7 +26,8 @@
         "adding": "게임 추가하는 중…",
         "addSuccess": "게임이 성공적으로 추가되었습니다",
         "addError": "게임을 추가하는 데 실패했습니다: {{message}}"
-      }
+      },
+      "upscale": "초해상도 업스케일"
     },
     "search": {
       "dataSource": "자료 출처",

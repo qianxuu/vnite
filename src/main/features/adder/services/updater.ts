@@ -20,18 +20,22 @@ import { GameDBManager } from '~/core/database'
 import { scraperManager } from '~/features/scraper'
 import { cacheDescriptionImages } from '~/features/scraper/services/descriptionImageCache'
 import { ipcManager } from '~/core/ipc'
+import { ConfigDBManager } from '~/core/database'
 import log from 'electron-log/main'
+import { upscaleImage } from '~/utils'
 
 export async function batchUpdateGameMetadata({
   gameIds,
   dataSource,
   fields = ['#all'] as (GameMetadataField | GameMetadataUpdateMode)[],
+  upscaleScale,
   options = {},
   concurrency = 5
 }: {
   gameIds: string[]
   dataSource: string
   fields?: (GameMetadataField | GameMetadataUpdateMode)[]
+  upscaleScale?: number
   options?: GameMetadataUpdateOptions
   concurrency?: number
 }): Promise<BatchUpdateResults> {
@@ -95,6 +99,7 @@ export async function batchUpdateGameMetadata({
             dataSource,
             dataSourceId: existingDataSourceId,
             fields,
+            upscaleScale,
             options
           })
 
@@ -158,6 +163,7 @@ export async function batchUpdateGameMetadata({
           dataSource,
           dataSourceId: selectedResult.id,
           fields,
+          upscaleScale,
           options
         })
 
@@ -255,6 +261,7 @@ export async function updateGameMetadata({
   dataSourceId,
   fields = ['#all'] as (GameMetadataField | GameMetadataUpdateMode)[],
   backgroundUrl,
+  upscaleScale,
   options = {}
 }: {
   dbId: string
@@ -262,6 +269,7 @@ export async function updateGameMetadata({
   dataSourceId: string
   fields?: (GameMetadataField | GameMetadataUpdateMode)[]
   backgroundUrl?: string
+  upscaleScale?: number
   options?: GameMetadataUpdateOptions
 }): Promise<void> {
   try {
@@ -936,19 +944,38 @@ export async function updateGameMetadata({
 
     // Add image save operations
     if (updateImages) {
-      imageResults.forEach((result) => {
+      for (const result of imageResults) {
         if (result.urls.length > 0 && result.urls[0]) {
+          let imageData: Buffer | string = result.urls[0]
+          // Apply upscaling for background images if requested
+          if (result.type === 'background' && upscaleScale && upscaleScale > 0) {
+            try {
+              const upscalerPath = await ConfigDBManager.getConfigLocalValue(
+                'game.linkage.upscaler.path'
+              )
+              if (upscalerPath) {
+                imageData = await upscaleImage(result.urls[0], upscalerPath, {
+                  scale: upscaleScale
+                })
+              }
+            } catch (err) {
+              log.warn(
+                `[Updater] Failed to upscale background image, using original: ${(err as Error).message}`
+              )
+              imageData = result.urls[0]
+            }
+          }
           dbPromises.push(
             GameDBManager.setGameImage(
               dbId,
               result.type as 'cover' | 'background' | 'logo' | 'icon',
-              result.urls[0]
+              imageData
             ).catch((err) => {
               log.warn(`[Updater] Failed to save game image (${result.type}): ${err.message}`)
             })
           )
         }
-      })
+      }
     }
 
     // Execute all database operations in parallel

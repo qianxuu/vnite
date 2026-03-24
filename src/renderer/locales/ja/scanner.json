@@ -128,6 +128,8 @@
     "hierarchyLevelHelp": "既定 0：Path 直下の第1階層サブフォルダをゲームフォルダとして扱います。",
     "targetCollection": "ターゲットコレクション",
     "targetCollectionNone": "なし",
-    "normalizeFolderName": "フォルダ名を正規化"
+    "normalizeFolderName": "フォルダ名をクリーンアップ",
+    "upscaleScale": "超解像放大",
+    "noUpscale": "拡大なし"
   }
 }

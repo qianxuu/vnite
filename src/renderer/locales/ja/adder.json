@@ -26,7 +26,8 @@
         "adding": "ゲームを追加中…",
         "addSuccess": "ゲームの追加に成功しました",
         "addError": "ゲームの追加に失敗しました: {{message}}"
-      }
+      },
+      "noUpscale": "拡大なし"
     },
     "search": {
       "dataSource": "データソース",
@@ -68,6 +69,8 @@
     }
   },
   "gameBatchAdder": {
+    "upscaleScale": "超解像放大",
+    "noUpscale": "拡大なし",
     "dialog": {
       "title": "ゲームを一括追加",
       "waitForCompletion": "ゲームの追加が完了するまでお待ちください"

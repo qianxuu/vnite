@@ -47,6 +47,9 @@ export const EditScannerDialog: React.FC<EditScannerDialogProps> = ({
   const getAllCollections = useGameCollectionStore((state) => state.getAllCollections)
   const collections = getAllCollections()
 
+  const [upscalerPath] = useConfigLocalState('game.linkage.upscaler.path')
+  const isUpscalerConfigured = !!upscalerPath
+
   useEffect(() => {
     // Check if the target collection exists
     if (formState.targetCollection && !checkCollectionExists(formState.targetCollection)) {
@@ -243,6 +246,28 @@ export const EditScannerDialog: React.FC<EditScannerDialogProps> = ({
               updateFormState({ normalizeFolderName: Boolean(checked) })
             }
           ></Switch>
+          {/* Upscale Scale */}
+          {isUpscalerConfigured && (
+            <>
+              <div className={cn('whitespace-nowrap select-none justify-self-start')}>
+                {t('editScanner.upscaleScale')}
+              </div>
+              <Select
+                value={String(formState.upscaleScale || 0)}
+                onValueChange={(value) => updateFormState({ upscaleScale: Number(value) })}
+              >
+                <SelectTrigger className={cn('w-full text-sm')}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">{t('editScanner.noUpscale')}</SelectItem>
+                  <SelectItem value="2">2x</SelectItem>
+                  <SelectItem value="3">3x</SelectItem>
+                  <SelectItem value="4">4x</SelectItem>
+                </SelectContent>
+              </Select>
+            </>
+          )}
         </div>
 
         <DialogFooter>

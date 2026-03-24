@@ -674,7 +674,9 @@
       "update": "更新元数据",
       "startBatch": "开始批量更新",
       "updating": "更新中...",
-      "batchUpdating": "批量更新中..."
+      "batchUpdating": "批量更新中...",
+      "upscaleBackground": "超分辨率放大背景图",
+      "noUpscale": "不放大"
     },
     "notifications": {
       "updating": "正在更新游戏元数据...",

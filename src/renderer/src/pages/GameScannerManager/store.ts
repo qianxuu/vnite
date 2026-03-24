@@ -20,6 +20,7 @@ interface ScannerForm {
   hierarchyLevel: number
   targetCollection: string
   normalizeFolderName: boolean
+  upscaleScale: number
 }
 
 interface GlobalScannerSettings {
@@ -93,7 +94,8 @@ export const useGameScannerStore = create<GameScannerStore>((set, get) => ({
     scanMode: 'auto',
     hierarchyLevel: 0,
     targetCollection: 'none',
-    normalizeFolderName: false
+    normalizeFolderName: false,
+    upscaleScale: 0
   },
   globalSettings: {
     interval: 0,
@@ -237,7 +239,8 @@ export const useGameScannerStore = create<GameScannerStore>((set, get) => ({
           scanMode: inferredMode,
           hierarchyLevel: Math.max(0, Math.floor(inferredLevel)),
           targetCollection: scanner.targetCollection || 'none',
-          normalizeFolderName: scanner.normalizeFolderName || false
+          normalizeFolderName: scanner.normalizeFolderName || false,
+          upscaleScale: scanner.upscaleScale || 0
         }
       })
     } else {
@@ -248,7 +251,8 @@ export const useGameScannerStore = create<GameScannerStore>((set, get) => ({
           scanMode: 'auto',
           hierarchyLevel: 0,
           targetCollection: 'none',
-          normalizeFolderName: false
+          normalizeFolderName: false,
+          upscaleScale: 0
         }
       })
     }

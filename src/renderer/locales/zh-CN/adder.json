@@ -26,7 +26,8 @@
         "adding": "添加游戏中…",
         "addSuccess": "添加游戏成功",
         "addError": "添加游戏失败: {{message}}"
-      }
+      },
+      "noUpscale": "不放大"
     },
     "search": {
       "dataSource": "数据来源",
@@ -68,6 +69,8 @@
     }
   },
   "gameBatchAdder": {
+    "upscaleScale": "超分辨率放大",
+    "noUpscale": "不放大",
     "dialog": {
       "title": "批量添加游戏",
       "waitForCompletion": "请等待游戏添加完成"

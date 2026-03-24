@@ -27,7 +27,7 @@ import {
 import { ScraperCapabilities, AllGameMetadataUpdateFields } from '@appTypes/utils'
 import { useTranslation } from 'react-i18next'
 import { useGameMetadataUpdaterStore } from './store'
-import { useConfigState } from '~/hooks'
+import { useConfigState, useConfigLocalState } from '~/hooks'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import { cn } from '~/utils'
 import { delay } from '@appUtils'
@@ -38,12 +38,17 @@ export function GameMetadataUpdaterDialog(): React.JSX.Element {
     gameIds,
     dataSourceId,
     backgroundUrl,
+    upscaleScale,
+    setUpscaleScale,
     handleClose,
     dataSource,
     setDataSource,
     showProgress,
     setShowProgress
   } = useGameMetadataUpdaterStore()
+
+  const [upscalerPath] = useConfigLocalState('game.linkage.upscaler.path')
+  const isUpscalerConfigured = !!upscalerPath
 
   const [selectedFields, setSelectedFields] = useState<
     (GameMetadataField | GameMetadataUpdateMode)[]
@@ -213,6 +218,7 @@ export function GameMetadataUpdaterDialog(): React.JSX.Element {
         dataSourceId: dataSourceId!,
         fields: selectedFields,
         backgroundUrl,
+        upscaleScale: upscaleScale || undefined,
         options
       }
 
@@ -261,6 +267,7 @@ export function GameMetadataUpdaterDialog(): React.JSX.Element {
         gameIds,
         dataSource,
         fields: selectedFields,
+        upscaleScale: upscaleScale || undefined,
         options,
         concurrency
       }
@@ -390,6 +397,27 @@ export function GameMetadataUpdaterDialog(): React.JSX.Element {
                   </Select>
                 </div>
               </div>
+
+              {/* Upscale background option */}
+              {isUpscalerConfigured && (
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="upscale-scale">{t('updater.dialog.upscaleBackground')}</Label>
+                  <Select
+                    value={String(upscaleScale)}
+                    onValueChange={(val) => setUpscaleScale(Number(val))}
+                  >
+                    <SelectTrigger id="upscale-scale" className="w-[100px] h-8 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">{t('updater.dialog.noUpscale')}</SelectItem>
+                      <SelectItem value="2">2x</SelectItem>
+                      <SelectItem value="3">3x</SelectItem>
+                      <SelectItem value="4">4x</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               {/* Concurrency settings in batch mode */}
               {isBatchMode && (

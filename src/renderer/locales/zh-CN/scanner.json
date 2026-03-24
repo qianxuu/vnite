@@ -128,6 +128,8 @@
     "hierarchyLevelHelp": "默认 0：Path 下的第一级子文件夹视为游戏文件夹。",
     "targetCollection": "目标收藏",
     "targetCollectionNone": "无",
-    "normalizeFolderName": "清理文件夹名"
+    "normalizeFolderName": "清理文件夹名",
+    "upscaleScale": "超分辨率放大",
+    "noUpscale": "不放大"
   }
 }
