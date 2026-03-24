@@ -4,13 +4,15 @@ import { toast } from 'sonner'
 import { useGameBatchAdderStore } from './store'
 import { GameList } from './GameList'
 import { useTranslation } from 'react-i18next'
+import { UpscaleSelectField } from '~/components/utils/UpscaleSelect'
 
 export function GameBatchAdder(): React.JSX.Element {
   const { t } = useTranslation('adder')
   const {
     isOpen,
     isLoading,
-    actions: { setIsOpen, setGames, setIsLoading }
+    upscaleScale,
+    actions: { setIsOpen, setGames, setIsLoading, setUpscaleScale }
   } = useGameBatchAdderStore()
 
   const handleClose = (): void => {
@@ -22,6 +24,7 @@ export function GameBatchAdder(): React.JSX.Element {
     setIsOpen(false)
     setGames([])
     setIsLoading(false)
+    setUpscaleScale(0)
   }
 
   return (
@@ -34,6 +37,11 @@ export function GameBatchAdder(): React.JSX.Element {
         onClose={handleClose}
       >
         <GameList />
+        <UpscaleSelectField
+          className={cn('px-1')}
+          value={upscaleScale}
+          onValueChange={setUpscaleScale}
+        />
       </DialogContent>
     </Dialog>
   )
