@@ -177,6 +177,11 @@
       "placeholder": "Enter the path to Magpie.exe",
       "hotkeyLabel": "Magpie scaling hotkey",
       "hotkeyDescription": "Set hotkey for Magpie scaling"
+    },
+    "upscaler": {
+      "name": "Image Upscaler",
+      "description": "Configure the executable path for an image upscaling tool (waifu2x-ncnn-vulkan / realcugan-ncnn-vulkan / realesrgan-ncnn-vulkan)",
+      "placeholder": "Enter the path to the upscaler executable"
     }
   },
   "theme": {
