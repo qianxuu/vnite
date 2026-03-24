@@ -177,6 +177,11 @@
       "placeholder": "Magpie.exeのパスを入力してください",
       "hotkeyLabel": "Magpieスケーリングホットキー",
       "hotkeyDescription": "Magpieスケーリングのホットキーを設定"
+    },
+    "upscaler": {
+      "name": "waifu2x-ncnn-vulkan / realcugan-ncnn-vulkan / realesrgan-ncnn-vulkan",
+      "description": "ゲーム背景画像の超解像アップスケールに使用するツールです",
+      "placeholder": "アップスケーラーのパスを入力してください"
     }
   },
   "theme": {
