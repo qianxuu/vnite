@@ -177,6 +177,11 @@
       "placeholder": "请输入Magpie.exe的路径",
       "hotkeyLabel": "Magpie 缩放快捷键",
       "hotkeyDescription": "设置 Magpie 缩放的快捷键"
+    },
+    "upscaler": {
+      "name": "waifu2x-ncnn-vulkan / realcugan-ncnn-vulkan / realesrgan-ncnn-vulkan",
+      "description": "用于超分辨率放大游戏背景图的工具",
+      "placeholder": "请输入超分辨率放大工具的exe路径"
     }
   },
   "theme": {
